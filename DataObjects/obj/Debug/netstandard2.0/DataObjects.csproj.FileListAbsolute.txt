@@ -1,0 +1,9 @@
+C:\Projects\Pro4Soft\Malvern\MalvernDataObjects\DataObjects\obj\Debug\netstandard2.0\DataObjects.csproj.AssemblyReference.cache
+C:\Projects\Pro4Soft\Malvern\MalvernDataObjects\DataObjects\obj\Debug\netstandard2.0\DataObjects.AssemblyInfoInputs.cache
+C:\Projects\Pro4Soft\Malvern\MalvernDataObjects\DataObjects\obj\Debug\netstandard2.0\DataObjects.AssemblyInfo.cs
+C:\Projects\Pro4Soft\Malvern\MalvernDataObjects\DataObjects\obj\Debug\netstandard2.0\DataObjects.csproj.CoreCompileInputs.cache
+C:\Projects\Pro4Soft\Malvern\MalvernDataObjects\DataObjects\bin\Debug\netstandard2.0\DataObjects.deps.json
+C:\Projects\Pro4Soft\Malvern\MalvernDataObjects\DataObjects\bin\Debug\netstandard2.0\DataObjects.dll
+C:\Projects\Pro4Soft\Malvern\MalvernDataObjects\DataObjects\bin\Debug\netstandard2.0\DataObjects.pdb
+C:\Projects\Pro4Soft\Malvern\MalvernDataObjects\DataObjects\obj\Debug\netstandard2.0\DataObjects.dll
+C:\Projects\Pro4Soft\Malvern\MalvernDataObjects\DataObjects\obj\Debug\netstandard2.0\DataObjects.pdb
