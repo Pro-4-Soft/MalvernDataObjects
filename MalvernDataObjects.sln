@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Data", "1. Data", "{0640
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataObjects", "DataObjects\DataObjects.csproj", "{B84A15E0-CB83-45F6-9812-3D92B3CC65ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{C26F5EF7-B361-43B3-A84E-2CF321159EA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,12 +21,17 @@ Global
 		{B84A15E0-CB83-45F6-9812-3D92B3CC65ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B84A15E0-CB83-45F6-9812-3D92B3CC65ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B84A15E0-CB83-45F6-9812-3D92B3CC65ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C26F5EF7-B361-43B3-A84E-2CF321159EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C26F5EF7-B361-43B3-A84E-2CF321159EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C26F5EF7-B361-43B3-A84E-2CF321159EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C26F5EF7-B361-43B3-A84E-2CF321159EA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B84A15E0-CB83-45F6-9812-3D92B3CC65ED} = {0640C4B3-7165-4B04-B4B9-B99F95D9B156}
+		{C26F5EF7-B361-43B3-A84E-2CF321159EA7} = {EE6E512C-1B04-4304-938B-DB68A369626C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38A0A4E3-CA50-4CCA-BBFF-691DA13D26C6}
