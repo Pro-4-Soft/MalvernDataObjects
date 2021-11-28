@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Pro4Soft.Malvern.DataObjects.Infrastructure;
 
@@ -36,6 +37,8 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
     [MalvernTransaction("103")]
     public class RateShopResponse : BaseMalvernResponse
     {
+        
+
         [MalvernField(1034, 250)]
         public List<CarrierServiceRate> Rates { get; set; }
 
@@ -45,6 +48,8 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 
     public class CarrierServiceRate
     {
+        public Guid Id { get; set; } = Guid.NewGuid();
+
         public string Carrier { get; set; }
         public string Service { get; set; }
         public decimal? Rate { get; set; }

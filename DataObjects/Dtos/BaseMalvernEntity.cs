@@ -18,6 +18,15 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 
     public abstract class BaseMalvernEntity
     {
+        protected BaseMalvernEntity()
+        {
+            Id = Guid.NewGuid();
+            DateCreated = DateTimeOffset.Now;
+        }
+
+        public Guid Id { get; set; }
+        public DateTimeOffset DateCreated { get; set; }
+
         [MalvernField(0, 3)] 
         public string TransactionType => ((MalvernTransactionAttribute) Attribute.GetCustomAttribute(GetType(), typeof(MalvernTransactionAttribute))).TransactionId;
 
@@ -30,7 +39,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         [MalvernField(3)]
         public string ErrorMessage { get; set; }
 
-        [MalvernField(99, 0)] 
+        [MalvernField(99)] 
         public string EndRecord => string.Empty;
 
         public string Encode()

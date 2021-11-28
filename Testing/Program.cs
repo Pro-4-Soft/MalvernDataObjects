@@ -25,6 +25,8 @@ namespace Testing
 
             await Console.Out.WriteLineAsync(resp.Encode());
 
+
+
             await Console.In.ReadLineAsync();
         }
     }
