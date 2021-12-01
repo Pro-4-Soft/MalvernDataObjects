@@ -8,12 +8,16 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 {
     public abstract class BaseMalvernRequest: BaseMalvernEntity
     {
-
+        public string Sscc18Code { get; set; }
+        public string PoNumber { get; set; }
+        public string PickTicketNumber { get; set; }
+        public string Customer { get; set; }
+        public string TrackingNumber { get; set; }
     }
 
     public abstract class BaseMalvernResponse : BaseMalvernEntity
     {
-
+        
     }
 
     public abstract class BaseMalvernEntity

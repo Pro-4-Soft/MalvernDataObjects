@@ -6,13 +6,10 @@ using Pro4Soft.Malvern.DataObjects.Infrastructure;
 namespace Pro4Soft.Malvern.DataObjects.Dtos
 {
     [MalvernTransaction("003")]
-    public class RateShopRequest : BaseMalvernRequest
+    public class RateShopRequest : RatePackageRequest
     {
         [MalvernField(17, 9)]
         public string RecipientZipCode { get; set; }
-
-        [MalvernField(21, 6, 2)]
-        public string ActualPackageWeight { get; set; }
 
         [MalvernField(1033, 250)]
         public List<CarrierServiceRate> RateRequestTypes { get; set; } = new List<CarrierServiceRate>();
@@ -35,10 +32,8 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
     }
 
     [MalvernTransaction("103")]
-    public class RateShopResponse : BaseMalvernResponse
+    public class RateShopResponse : RatePackageResponse
     {
-        
-
         [MalvernField(1034, 250)]
         public List<CarrierServiceRate> Rates { get; set; }
 

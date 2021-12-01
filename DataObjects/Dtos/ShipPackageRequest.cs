@@ -11,6 +11,8 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
     [MalvernTransaction("101")]
     public class ShipPackageResponse: RatePackageResponse
     {
+        
+
         [MalvernField(188, 30 * 1024)]
         public string LabelBuffer { get; set; }
 

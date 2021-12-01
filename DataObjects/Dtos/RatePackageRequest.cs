@@ -3,7 +3,7 @@
 namespace Pro4Soft.Malvern.DataObjects.Dtos
 {
     [MalvernTransaction("002")]
-    public class RatePackageRequest: BaseMalvernRequest
+    public class RatePackageRequest : BaseMalvernRequest
     {
         //Required
         [MalvernField(11, 30)]
@@ -48,10 +48,16 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
     }
 
     [MalvernTransaction("102")]
-    public class RatePackageResponse: BaseMalvernResponse
+    public class RatePackageResponse : BaseMalvernResponse
     {
+        [MalvernField(19, 30)]
+        public string Carrier { get; set; }
+
         [MalvernField(21, 6, 2)]
         public decimal? PackageWeight { get; set; }
+
+        [MalvernField(22, 30)]
+        public string Service { get; set; }
 
         [MalvernField(25, 15)]
         public string DepartmentId { get; set; }
