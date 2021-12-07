@@ -99,7 +99,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public string CustomerNo { get; set; }
 
         [MalvernField(8004, 20)]
-        public string ShipmentID { get; set; }
+        public string ShipmentId { get; set; }
 
         [MalvernField(9020, 20, 0, true)]
         public string MultipleAccountCode { get; set; }
