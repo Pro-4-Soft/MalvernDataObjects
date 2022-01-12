@@ -41,14 +41,27 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         [MalvernField(22, 3)]
         public string ServiceLevelCode { get; set; }
 
-        /// <summary>
-        /// COL, BRC, B3P, etc (prepaid is the default)
-        /// </summary>
-        [MalvernField(23, 3)]
-        public string BillOption { get; set; }
-
         [MalvernField(25, 15)]
         public string Department { get; set; }
+
+
+        /// <summary>
+        /// COD Amount (Sending a value >0 servces as the COD Flag)
+        /// </summary>
+        [MalvernField(53, 10, 2)]
+        public string CODAmount { get; set; }
+                
+        /// <summary>
+        /// COD Payment Terms 1=company check acceptable (default) 2=Certified payment required
+        /// </summary>
+        [MalvernField(54, 1)]
+        public string CODTerms { get; set; }
+                
+        /// <summary>
+        /// Add Shipping charges to CODAmount Y or N (defaults to N)
+        /// </summary>
+        [MalvernField(186, 1)]
+        public string CODAddSH { get; set; }
 
         [MalvernField(50, 3)]
         public string CountryCode { get; set; }
@@ -64,6 +77,12 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 
         [MalvernField(71, 9)]
         public string DutiesAccount { get; set; }
+
+        /// <summary>
+        /// Send "Y" for Residential flag
+        /// </summary>
+        [MalvernField(440, 1)]
+        public string IsResidential { get; set; }
 
         [MalvernField(1202, 50)]
         public string Email { get; set; }
@@ -103,6 +122,12 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 
         [MalvernField(9020, 20, 0, true)]
         public string MultipleAccountCode { get; set; }
+
+        /// <summary>
+        /// DCR = Delivery Confirmation, DCS = Signature Required, DCA = Adult Signature Required
+        /// </summary>
+        [MalvernField(9041, 3)]
+        public string ConfirmationService { get; set; }
 
         [MalvernField(9051, 30)]
         public string ShipFromContact { get; set; }
