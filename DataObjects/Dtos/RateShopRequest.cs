@@ -8,36 +8,32 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
     [MalvernTransaction("003")]
     public class RateShopRequest : RatePackageRequest
     {
-        [MalvernField(17, 9)]
+        [MalvernField("17", 9)]
         public string RecipientZipCode { get; set; }
 
-        [MalvernField(1033, 250)]
+        [MalvernField("1033", 250)]
         public List<CarrierServiceRate> RateRequestTypes { get; set; } = new List<CarrierServiceRate>();
 
-        [MalvernField(9001, 5, 1)] 
+        [MalvernField("9001", 5, 1)] 
         public string LtlFreightClass { get; set; }
 
-        //Optional
-        [MalvernField(440, 1)]
-        public bool? IsResidential { get; set; }
-
-        [MalvernField(1273, 2)]
+        [MalvernField("1273", 2)]
         public string PackageType { get; set; }
 
-        [MalvernField(9020, 20)]
+        [MalvernField("9020", 20)]
         public string MultipleAccountCodes { get; set; }
 
-        [MalvernField(9060, 2)]
+        [MalvernField("9060", 2)]
         public string NumberOfBoxes { get; set; }
     }
 
     [MalvernTransaction("103")]
     public class RateShopResponse : RatePackageResponse
     {
-        [MalvernField(1034, 250)]
+        [MalvernField("1034", 250)]
         public List<CarrierServiceRate> Rates { get; set; }
 
-        [MalvernField(1035, 250)]
+        [MalvernField("1035", 250)]
         public List<CarrierServiceRate> DiscountedRates { get; set; }
     }
 

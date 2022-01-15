@@ -31,19 +31,19 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public Guid Id { get; set; }
         public DateTimeOffset DateCreated { get; set; }
 
-        [MalvernField(0, 3)] 
+        [MalvernField("0", 3)] 
         public string TransactionType => ((MalvernTransactionAttribute) Attribute.GetCustomAttribute(GetType(), typeof(MalvernTransactionAttribute))).TransactionId;
 
-        [MalvernField(1, 15)]
+        [MalvernField("1", 15)]
         public string TransactionId { get; set; }
 
-        [MalvernField(2)]
+        [MalvernField("2")]
         public string ErrorCode { get; set; }
 
-        [MalvernField(3)]
+        [MalvernField("3")]
         public string ErrorMessage { get; set; }
 
-        [MalvernField(99)] 
+        [MalvernField("99")] 
         public string EndRecord => string.Empty;
 
         public string Encode()
@@ -105,29 +105,29 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 
         public static BaseMalvernEntity Decode(string toDecode)
         {
-            var fieldPropMap = new Dictionary<int, string>();
+            var fieldPropMap = new Dictionary<string, string>();
 
             var curString = toDecode;
             while (true)
             {
                 var next = curString.IndexOf(",\"", StringComparison.Ordinal);
-                var index = int.TryParse(curString.Substring(0, next), out var ind) ? ind : throw new MalvernFormatException("Invalid Malvern string format", toDecode);
+                var key = curString.Substring(0, next);
                 curString = curString.Substring(next + ",\"".Length);
 
                 next = curString.IndexOf(",\"", StringComparison.Ordinal);
                 if (next < 0)
                 {
-                    fieldPropMap[index] = curString.Trim('"');
+                    fieldPropMap[key] = curString.Trim('"');
                     break;//Last element
                 }
 
                 var lastQuote = curString.Substring(0, next).LastIndexOf("\"", StringComparison.Ordinal);
                 var val = curString.Substring(0, lastQuote);
-                fieldPropMap[index] = val;
+                fieldPropMap[key] = val;
                 curString = curString.Substring(lastQuote+1);
             }
 
-            var transactionType = fieldPropMap.TryGetValue(0, out var t) ? t : throw new MalvernFormatException("Invalid Malvern string format", toDecode);
+            var transactionType = fieldPropMap.TryGetValue("0", out var t) ? t : throw new MalvernFormatException("Invalid Malvern string format", toDecode);
             var resultType = typeof(BaseMalvernEntity).Assembly.GetTypes()
                 .Where(c => typeof(BaseMalvernEntity).IsAssignableFrom(c))
                 .Where(c => Attribute.IsDefined(c, typeof(MalvernTransactionAttribute)))

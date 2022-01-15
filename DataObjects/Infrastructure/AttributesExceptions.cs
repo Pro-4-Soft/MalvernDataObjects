@@ -16,18 +16,26 @@ namespace Pro4Soft.Malvern.DataObjects.Infrastructure
     [AttributeUsage(AttributeTargets.Property)]
     public class MalvernFieldAttribute : Attribute
     {
-        public int FieldId { get; }
+        public string FieldId { get; }
         public int Length { get; }
         public int DecimalLength { get; }
         public bool IsOptional { get; }
 
-        public MalvernFieldAttribute(int fieldId, int length = 0, int decimalLength = 0, bool isOptional = false)
+        public MalvernFieldAttribute(string fieldId, int length = 0, int decimalLength = 0, bool isOptional = false)
         {
             FieldId = fieldId;
             Length = length;
             DecimalLength = decimalLength;
             IsOptional = isOptional;
         }
+
+        //public MalvernFieldAttribute(int fieldId, int length = 0, int decimalLength = 0, bool isOptional = false)
+        //{
+        //    FieldId = fieldId.ToString();
+        //    Length = length;
+        //    DecimalLength = decimalLength;
+        //    IsOptional = isOptional;
+        //}
     }
 
     public class MalvernFormatException : Exception
