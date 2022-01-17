@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -17,9 +18,9 @@ namespace Pro4Soft.Malvern.DataObjects.Infrastructure
             _port = port;
         }
 
-        public BaseMalvernResponse Send(BaseMalvernRequest payload)
+        public BaseMalvernResponse Send(BaseMalvernRequest payload, Dictionary<string, List<string>> carrierServiceMap)
         {
-            var stringToSend = payload.Encode();
+            var stringToSend = payload.Encode(carrierServiceMap);
 
             var response = SendRaw(stringToSend);
 

@@ -12,7 +12,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public string RecipientZipCode { get; set; }
 
         [MalvernField("1033", 250)]
-        public List<CarrierServiceRate> RateRequestTypes { get; set; } = new List<CarrierServiceRate>();
+        public List<CarrierServiceRate> RateRequestTypes { get; set; } = new();
 
         [MalvernField("9001", 5, 1)] 
         public string LtlFreightClass { get; set; }

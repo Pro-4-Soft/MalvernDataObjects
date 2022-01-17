@@ -46,7 +46,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         [MalvernField("99")] 
         public string EndRecord => string.Empty;
 
-        public string Encode()
+        public string Encode(Dictionary<string, List<string>> carrierServiceMap = null)
         {
             var type = GetType();
             var properties = typeof(BaseMalvernEntity).GetProperties().ToList();
@@ -93,7 +93,17 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                         builder.Append($@"{attr.FieldId},""{(bol ? "Y" : string.Empty)}""");
                         break;
                     case List<CarrierServiceRate> rates:
-                        builder.Append($@"{attr.FieldId},""{string.Join(",", rates.Select(c => c.ToString()))}""");
+                    {
+                        var subList = new List<string>();
+                        foreach (var rate in rates)
+                        {
+                            if (carrierServiceMap != null && carrierServiceMap.TryGetValue(rate.ToString(), out var replacement))
+                                subList.AddRange(replacement);
+                            else
+                                subList.Add(rate.ToString());
+                        }
+                        builder.Append($@"{attr.FieldId},""{string.Join(",", subList)}""");
+                    }
                         break;
                     default:
                         builder.Append($@"{attr.FieldId},""{val}""");
