@@ -24,7 +24,7 @@ namespace Pro4Soft.Malvern.DataObjects.Infrastructure
 
             var response = SendRaw(stringToSend);
 
-            var result = BaseMalvernEntity.Decode(response) as BaseMalvernResponse;
+            var result = BaseMalvernTransaction.Decode(response) as BaseMalvernResponse;
 
             return result;
         }

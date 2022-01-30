@@ -6,7 +6,7 @@ using Pro4Soft.Malvern.DataObjects.Infrastructure;
 
 namespace Pro4Soft.Malvern.DataObjects.Dtos
 {
-    public abstract class BaseMalvernRequest: BaseMalvernEntity
+    public abstract class BaseMalvernRequest: BaseMalvernTransaction
     {
         public string Sscc18Code { get; set; }
         public string PoNumber { get; set; }
@@ -15,14 +15,14 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public string TrackingNumber { get; set; }
     }
 
-    public abstract class BaseMalvernResponse : BaseMalvernEntity
+    public abstract class BaseMalvernResponse : BaseMalvernTransaction
     {
         
     }
 
-    public abstract class BaseMalvernEntity
+    public abstract class BaseMalvernTransaction: BaseMalvernEntity
     {
-        protected BaseMalvernEntity()
+        protected BaseMalvernTransaction()
         {
             Id = Guid.NewGuid();
             DateCreated = DateTimeOffset.Now;
@@ -45,15 +45,14 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 
         [MalvernField("99")] 
         public string EndRecord => string.Empty;
+    }
 
-        public string Encode(Dictionary<string, List<string>> carrierServiceMap = null)
+    public class BaseMalvernEntity
+    {
+        public string Encode(Dictionary<string, List<string>> carrierServiceMap = null, string suffix = null)
         {
             var type = GetType();
-            var properties = typeof(BaseMalvernEntity).GetProperties().ToList();
-            var last = properties.Last();
-            properties.Remove(last);
-            properties.AddRange(type.GetProperties()
-                .Where(c => c.DeclaringType != typeof(BaseMalvernEntity))
+            var properties = type.GetProperties()
                 .Select(c => new
                 {
                     Attr = Attribute.GetCustomAttribute(c, typeof(MalvernFieldAttribute)) as MalvernFieldAttribute,
@@ -62,11 +61,17 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                 .Where(c => c.Attr != null)
                 .OrderBy(c => c.Attr.FieldId)
                 .Select(c => c.Type)
-                .ToList());
-            properties.Add(last);
+                .ToList();
+
+            var last = properties.SingleOrDefault(c => ((MalvernFieldAttribute)Attribute.GetCustomAttribute(c, typeof(MalvernFieldAttribute))).FieldId == "99");
+            if (last != null)
+            {
+                properties.Remove(last);
+                properties.Add(last);
+            }
 
             var builder = new StringBuilder();
-            
+
             foreach (var prop in properties)
             {
                 var attr = Attribute.GetCustomAttribute(prop, typeof(MalvernFieldAttribute)) as MalvernFieldAttribute;
@@ -74,46 +79,57 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                     continue;
 
                 var val = prop.GetValue(this);
+                var fieldId = attr.FieldId;
+                if (!string.IsNullOrWhiteSpace(suffix))
+                    fieldId = $"{fieldId}-{suffix}";
+
                 if (string.IsNullOrWhiteSpace(val?.ToString()))
                 {
-                    if(!attr.IsOptional)
-                        builder.Append($@"{attr.FieldId},""""");
+                    if (!attr.IsOptional)
+                        builder.Append($@"{fieldId},""""");
                     continue;
                 }
-
+                
                 switch (val)
                 {
                     case string str:
-                        builder.Append($@"{attr.FieldId},""{str.Substring(0, attr.Length > 0 && str.Length > attr.Length ? attr.Length : str.Length)}""");
+                        builder.Append($@"{fieldId},""{str.Substring(0, attr.Length > 0 && str.Length > attr.Length ? attr.Length : str.Length)}""");
                         break;
                     case decimal dec:
-                        builder.Append($@"{attr.FieldId},""{decimal.Round(dec, attr.DecimalLength)}""");
+                        builder.Append($@"{fieldId},""{decimal.Round(dec, attr.DecimalLength)}""");
                         break;
                     case bool bol:
-                        builder.Append($@"{attr.FieldId},""{(bol ? "Y" : string.Empty)}""");
+                        builder.Append($@"{fieldId},""{(bol ? "Y" : string.Empty)}""");
                         break;
                     case List<CarrierServiceRate> rates:
-                    {
-                        var subList = new List<string>();
-                        foreach (var rate in rates)
                         {
-                            if (carrierServiceMap != null && carrierServiceMap.TryGetValue(rate.ToString(), out var replacement))
-                                subList.AddRange(replacement);
-                            else
-                                subList.Add(rate.ToString());
+                            var subList = new List<string>();
+                            foreach (var rate in rates)
+                            {
+                                if (carrierServiceMap != null && carrierServiceMap.TryGetValue(rate.ToString(), out var replacement))
+                                    subList.AddRange(replacement);
+                                else
+                                    subList.Add(rate.ToString());
+                            }
+                            builder.Append($@"{fieldId},""{string.Join(",", subList)}""");
                         }
-                        builder.Append($@"{attr.FieldId},""{string.Join(",", subList)}""");
-                    }
+                        break;
+                    case List<CustomsLineItem> customs:
+                        {
+                            var lines = customs.Select((line, i) => line.Encode(carrierServiceMap, $"{i+1}")).ToList();
+                            foreach (var line in lines)
+                                builder.Append(line);
+                        }
                         break;
                     default:
-                        builder.Append($@"{attr.FieldId},""{val}""");
+                        builder.Append($@"{fieldId},""{val}""");
                         break;
                 }
             }
             return builder.ToString();
         }
 
-        public static BaseMalvernEntity Decode(string toDecode)
+        public static BaseMalvernTransaction Decode(string toDecode)
         {
             var fieldPropMap = new Dictionary<string, string>();
 
@@ -134,19 +150,19 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                 var lastQuote = curString.Substring(0, next).LastIndexOf("\"", StringComparison.Ordinal);
                 var val = curString.Substring(0, lastQuote);
                 fieldPropMap[key] = val;
-                curString = curString.Substring(lastQuote+1);
+                curString = curString.Substring(lastQuote + 1);
             }
 
             var transactionType = fieldPropMap.TryGetValue("0", out var t) ? t : throw new MalvernFormatException("Invalid Malvern string format", toDecode);
-            var resultType = typeof(BaseMalvernEntity).Assembly.GetTypes()
-                .Where(c => typeof(BaseMalvernEntity).IsAssignableFrom(c))
+            var resultType = typeof(BaseMalvernTransaction).Assembly.GetTypes()
+                .Where(c => typeof(BaseMalvernTransaction).IsAssignableFrom(c))
                 .Where(c => Attribute.IsDefined(c, typeof(MalvernTransactionAttribute)))
                 .Where(c => !c.IsAbstract)
-                .FirstOrDefault(c => ((MalvernTransactionAttribute) Attribute.GetCustomAttribute(c, typeof(MalvernTransactionAttribute))).TransactionId == transactionType);
+                .FirstOrDefault(c => ((MalvernTransactionAttribute)Attribute.GetCustomAttribute(c, typeof(MalvernTransactionAttribute))).TransactionId == transactionType);
             if (resultType == null)
                 throw new MalvernFormatException($"No class that implements Transaction Type [{transactionType}]", toDecode);
 
-            var result = Activator.CreateInstance(resultType) as BaseMalvernEntity;
+            var result = Activator.CreateInstance(resultType) as BaseMalvernTransaction;
             var properties = resultType.GetProperties()
                 .Where(c => Attribute.IsDefined(c, typeof(MalvernFieldAttribute)))
                 .Where(c => c.CanWrite)
@@ -176,7 +192,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                         {
                             Carrier = split[0],
                             Service = split[1],
-                            Rate = split.Length > 2 ? decimal.Parse(split[2]) : (decimal?) null
+                            Rate = split.Length > 2 ? decimal.Parse(split[2]) : (decimal?)null
                         };
                     }).ToList());
             }

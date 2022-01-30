@@ -14,14 +14,11 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         [MalvernField("1033", 250)]
         public List<CarrierServiceRate> RateRequestTypes { get; set; } = new();
 
-        [MalvernField("9001", 5, 1)] 
+        [MalvernField("9001", 5, 1)]
         public string LtlFreightClass { get; set; }
 
         [MalvernField("1273", 2)]
         public string PackageType { get; set; }
-
-        [MalvernField("9020", 20)]
-        public string MultipleAccountCodes { get; set; }
 
         [MalvernField("9060", 2)]
         public string NumberOfBoxes { get; set; }

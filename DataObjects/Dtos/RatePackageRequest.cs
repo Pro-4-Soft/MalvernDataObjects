@@ -1,4 +1,5 @@
-﻿using Pro4Soft.Malvern.DataObjects.Infrastructure;
+﻿using System.Collections.Generic;
+using Pro4Soft.Malvern.DataObjects.Infrastructure;
 
 namespace Pro4Soft.Malvern.DataObjects.Dtos
 {
@@ -41,48 +42,42 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         [MalvernField("22", 3)]
         public string ServiceLevelCode { get; set; }
 
+        // COL, BRC, B3P, C/B etc (prepay id is the default)
+        [MalvernField("23", 3)]
+        public string BillOption { get; set; }
+
         [MalvernField("25", 15)]
         public string Department { get; set; }
 
-
-        /// <summary>
-        /// COD Amount (Sending a value >0 servces as the COD Flag)
-        /// </summary>
+        // COD Amount (Sending a value > 0 services as the COD Flag)
         [MalvernField("53", 10, 2)]
         public string CODAmount { get; set; }
                 
-        /// <summary>
-        /// COD Payment Terms 1=company check acceptable (default) 2=Certified payment required
-        /// </summary>
+        // COD Payment Terms 1=company check acceptable (default) 2=Certified payment required
         [MalvernField("54", 1)]
         public string CODTerms { get; set; }
-                
-        /// <summary>
-        /// Add Shipping charges to CODAmount Y or N (defaults to N)
-        /// </summary>
+        
+        // Add Shipping charges to CODAmount Y or N (defaults to N)
         [MalvernField("186", 1)]
-        public string CODAddSH { get; set; }
+        public bool CODAddShippingCharges { get; set; }
 
         [MalvernField("50", 3)]
         public string CountryCode { get; set; }
 
         [MalvernField("57", 6, 2)]
-        public string PackageLength { get; set; }
+        public decimal? PackageLength { get; set; }
         
         [MalvernField("58", 6, 2)]
-        public string PackageWidth { get; set; }
+        public decimal? PackageWidth { get; set; }
         
         [MalvernField("59", 6, 2)]
-        public string PackageHeight { get; set; }
+        public decimal? PackageHeight { get; set; }
 
         [MalvernField("71", 9)]
         public string DutiesAccount { get; set; }
 
-        /// <summary>
-        /// Send "Y" for Residential flag
-        /// </summary>
         [MalvernField("440", 1)]
-        public string IsResidential { get; set; }
+        public bool IsResidential { get; set; }
 
         [MalvernField("1202", 50)]
         public string Email { get; set; }
@@ -112,7 +107,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public string BillToZip { get; set; }
         
         [MalvernField("7018", 30)]
-        public string BillToCntryCode { get; set; }
+        public string BillToCountryCode { get; set; }
 
         [MalvernField("8002", 20)]
         public string CustomerNo { get; set; }
@@ -123,9 +118,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         [MalvernField("9020", 20, 0, true)]
         public string MultipleAccountCode { get; set; }
 
-        /// <summary>
-        /// DCR = Delivery Confirmation, DCS = Signature Required, DCA = Adult Signature Required
-        /// </summary>
+        // DCR = Delivery Confirmation, DCS = Signature Required, DCA = Adult Signature Required
         [MalvernField("9041", 3)]
         public string ConfirmationService { get; set; }
 
@@ -168,12 +161,31 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         [MalvernField("9405", 30)]
         public string PackageRef5 { get; set; }
 
-        //[MalvernField(9000, 10)]  //LTL - Not in use
-        //public string CarrierNumber { get; set; }
+        [MalvernField]
+        public List<CustomsLineItem> CustomsLines { get; set; } = new();
+    }
 
-        //[MalvernField(9001, 5, 1)]  //LTL - Not in use
-        //public string FreightClass { get; set; }
+    public class CustomsLineItem: BaseMalvernEntity
+    {
+        // Line Item Country of Origin (Manufacture) 2-Characters (US, CA, CN, etc) with line number suffix, e.g., 81-1, 82-2 etc)
+        [MalvernField("81", 2)]
+        public string Origin { get; set; }
 
+        // Item Description with line number suffix, e.g., 79-1, 79-2 etc)
+        [MalvernField("79", 50)]
+        public string CommodityDescription { get; set; }
+
+        // Line Item Units e.g., EA for Each. with line number suffix, e.g., 414-1, 414-2 etc)
+        [MalvernField("414", 10)]
+        public string Units { get; set; }
+
+        // Line Item Quantity with line number suffix, e.g., 82-1, 82-2 etc)
+        [MalvernField("82", 7)]
+        public decimal? Quantity { get; set; }
+
+        // Line Item Unit Value with line number suffix, e.g., 1030-1, 1030-2 etc)
+        [MalvernField("1030", 8, 2)]
+        public decimal? UnitValue { get; set; }
     }
 
     [MalvernTransaction("102")]

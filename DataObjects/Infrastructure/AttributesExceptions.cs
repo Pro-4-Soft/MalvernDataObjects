@@ -21,23 +21,15 @@ namespace Pro4Soft.Malvern.DataObjects.Infrastructure
         public int DecimalLength { get; }
         public bool IsOptional { get; }
 
-        public MalvernFieldAttribute(string fieldId, int length = 0, int decimalLength = 0, bool isOptional = false)
+        public MalvernFieldAttribute(string fieldId = "100", int length = 0, int decimalLength = 0, bool isOptional = false)
         {
             FieldId = fieldId;
             Length = length;
             DecimalLength = decimalLength;
             IsOptional = isOptional;
         }
-
-        //public MalvernFieldAttribute(int fieldId, int length = 0, int decimalLength = 0, bool isOptional = false)
-        //{
-        //    FieldId = fieldId.ToString();
-        //    Length = length;
-        //    DecimalLength = decimalLength;
-        //    IsOptional = isOptional;
-        //}
     }
-
+    
     public class MalvernFormatException : Exception
     {
         public string Payload { get; }
