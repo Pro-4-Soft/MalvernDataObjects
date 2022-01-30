@@ -49,4 +49,20 @@ namespace Pro4Soft.Malvern.DataObjects.Infrastructure
             ErrorCode = errorCode;
         }
     }
+
+    public class MalvernCommunicationException : Exception
+    {
+        public string Request { get; }
+
+        public MalvernCommunicationException(string request, string message) : base(message)
+        {
+            Request = request;
+        }
+
+        public override string ToString()
+        {
+            return $@"{Request}
+{base.ToString()}";
+        }
+    }
 }

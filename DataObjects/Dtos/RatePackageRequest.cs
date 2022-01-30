@@ -33,6 +33,9 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         [MalvernField("18", 15)]
         public string Phone { get; set; }
 
+        [MalvernField("20", 30)]
+        public string BillToAccountNumber { get; set; }
+
         [MalvernField("19", 3)]
         public string CarrierCode { get; set; }
 
