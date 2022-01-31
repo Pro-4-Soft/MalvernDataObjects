@@ -133,24 +133,54 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         {
             var fieldPropMap = new Dictionary<int, string>();
 
+            var customsLines = new Dictionary<int, Dictionary<int, string>>();
+
             var curString = toDecode;
             while (true)
             {
                 var next = curString.IndexOf(",\"", StringComparison.Ordinal);
-                var key = int.Parse(curString.Substring(0, next));
-                curString = curString.Substring(next + ",\"".Length);
-
-                next = curString.IndexOf(",\"", StringComparison.Ordinal);
-                if (next < 0)
+                var keyString = curString.Substring(0, next);
+                var split = keyString.Split('-');
+                if (split.Length > 1)
                 {
-                    fieldPropMap[key] = curString.Trim('"');
-                    break;//Last element
-                }
+                    var lineNum = int.Parse(split.Last());
+                    
+                    var key = int.Parse(split.First());
 
-                var lastQuote = curString.Substring(0, next).LastIndexOf("\"", StringComparison.Ordinal);
-                var val = curString.Substring(0, lastQuote);
-                fieldPropMap[key] = val;
-                curString = curString.Substring(lastQuote + 1);
+                    if (!customsLines.ContainsKey(lineNum))
+                        customsLines[lineNum] = new Dictionary<int, string>();
+                    var linePropMap = customsLines[lineNum];
+
+                    curString = curString.Substring(next + ",\"".Length);
+                    next = curString.IndexOf(",\"", StringComparison.Ordinal);
+                    if (next < 0)
+                    {
+                        linePropMap[key] = curString.Trim('"');
+                        break;//Last element
+                    }
+
+                    var lastQuote = curString.Substring(0, next).LastIndexOf("\"", StringComparison.Ordinal);
+                    var val = curString.Substring(0, lastQuote);
+                    linePropMap[key] = val;
+                    curString = curString.Substring(lastQuote + 1);
+                }
+                else
+                {
+                    var key = int.Parse(keyString);
+                    
+                    curString = curString.Substring(next + ",\"".Length);
+                    next = curString.IndexOf(",\"", StringComparison.Ordinal);
+                    if (next < 0)
+                    {
+                        fieldPropMap[key] = curString.Trim('"');
+                        break;//Last element
+                    }
+
+                    var lastQuote = curString.Substring(0, next).LastIndexOf("\"", StringComparison.Ordinal);
+                    var val = curString.Substring(0, lastQuote);
+                    fieldPropMap[key] = val;
+                    curString = curString.Substring(lastQuote + 1);
+                }
             }
 
             var transactionType = fieldPropMap.TryGetValue(0, out var t) ? t : throw new MalvernFormatException("Invalid Malvern string format", toDecode);
@@ -163,6 +193,15 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                 throw new MalvernFormatException($"No class that implements Transaction Type [{transactionType}]", toDecode);
 
             var result = Activator.CreateInstance(resultType) as BaseMalvernTransaction;
+
+            MapPropVal(result, fieldPropMap, customsLines);
+
+            return result;
+        }
+
+        private static void MapPropVal(object result, Dictionary<int, string> fieldPropMap, Dictionary<int, Dictionary<int, string>> customsLines = null)
+        {
+            var resultType = result.GetType();
             var properties = resultType.GetProperties()
                 .Where(c => Attribute.IsDefined(c, typeof(MalvernFieldAttribute)))
                 .Where(c => c.CanWrite)
@@ -173,31 +212,43 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                 var attr = Attribute.GetCustomAttribute(prop, typeof(MalvernFieldAttribute)) as MalvernFieldAttribute;
                 if (attr == null)
                     continue;
-                if (!fieldPropMap.TryGetValue(attr.FieldId, out var val))
-                    continue;
 
-                if (string.IsNullOrWhiteSpace(val))
-                    prop.SetValue(result, null);
-                else if (prop.PropertyType == typeof(string))
-                    prop.SetValue(result, val);
-                else if (prop.PropertyType == typeof(decimal?))
-                    prop.SetValue(result, decimal.TryParse(val, out var dec) ? dec : throw new FormatException($"Invalid decimal value [{val}]"));
-                else if (prop.PropertyType == typeof(bool?))
-                    prop.SetValue(result, val.Trim().ToLower() == "y");
-                else if (prop.PropertyType == typeof(List<CarrierServiceRate>))
-                    prop.SetValue(result, val.Split(',').Select(c =>
-                    {
-                        var split = c.Split(' ');
-                        return new CarrierServiceRate
+                if (prop.PropertyType != typeof(List<CustomsLineItem>) || customsLines == null)
+                {
+                    if (!fieldPropMap.TryGetValue(attr.FieldId, out var val))
+                        continue;
+                    if (string.IsNullOrWhiteSpace(val))
+                        prop.SetValue(result, null);
+                    else if (prop.PropertyType == typeof(string))
+                        prop.SetValue(result, val);
+                    else if (prop.PropertyType == typeof(decimal?))
+                        prop.SetValue(result, decimal.TryParse(val, out var dec) ? dec : throw new FormatException($"Invalid decimal value [{val}]"));
+                    else if (prop.PropertyType == typeof(bool?))
+                        prop.SetValue(result, val.Trim().ToLower() == "y");
+                    else if (prop.PropertyType == typeof(List<CarrierServiceRate>))
+                        prop.SetValue(result, val.Split(',').Select(c =>
                         {
-                            Carrier = split[0],
-                            Service = split[1],
-                            Rate = split.Length > 2 ? decimal.Parse(split[2]) : (decimal?)null
-                        };
-                    }).ToList());
+                            var split = c.Split(' ');
+                            return new CarrierServiceRate
+                            {
+                                Carrier = split[0],
+                                Service = split[1],
+                                Rate = split.Length > 2 ? decimal.Parse(split[2]) : (decimal?)null
+                            };
+                        }).ToList());
+                }
+                else
+                {
+                    var customs = new List<CustomsLineItem>();
+                    prop.SetValue(result, customs);
+                    foreach (var lineKey in customsLines.Keys.OrderBy(c => c))
+                    {
+                        var newLine = new CustomsLineItem();
+                        MapPropVal(newLine, customsLines[lineKey]);
+                        customs.Add(newLine);
+                    }
+                }
             }
-
-            return result;
         }
     }
 }
