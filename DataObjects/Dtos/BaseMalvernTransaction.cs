@@ -31,19 +31,19 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public Guid Id { get; set; }
         public DateTimeOffset DateCreated { get; set; }
 
-        [MalvernField("0", 3)] 
+        [MalvernField(0, 3)] 
         public string TransactionType => ((MalvernTransactionAttribute) Attribute.GetCustomAttribute(GetType(), typeof(MalvernTransactionAttribute))).TransactionId;
 
-        [MalvernField("1", 15)]
+        [MalvernField(1, 15)]
         public string TransactionId { get; set; }
 
-        [MalvernField("2")]
+        [MalvernField(2)]
         public string ErrorCode { get; set; }
 
-        [MalvernField("3")]
+        [MalvernField(3)]
         public string ErrorMessage { get; set; }
 
-        [MalvernField("99")] 
+        [MalvernField(99)] 
         public string EndRecord => string.Empty;
     }
 
@@ -63,7 +63,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                 .Select(c => c.Type)
                 .ToList();
 
-            var last = properties.SingleOrDefault(c => ((MalvernFieldAttribute)Attribute.GetCustomAttribute(c, typeof(MalvernFieldAttribute))).FieldId == "99");
+            var last = properties.SingleOrDefault(c => ((MalvernFieldAttribute)Attribute.GetCustomAttribute(c, typeof(MalvernFieldAttribute))).FieldId == 99);
             if (last != null)
             {
                 properties.Remove(last);
@@ -79,7 +79,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                     continue;
 
                 var val = prop.GetValue(this);
-                var fieldId = attr.FieldId;
+                var fieldId = attr.FieldId.ToString();
                 if (!string.IsNullOrWhiteSpace(suffix))
                     fieldId = $"{fieldId}-{suffix}";
 
@@ -131,13 +131,13 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 
         public static BaseMalvernTransaction Decode(string toDecode)
         {
-            var fieldPropMap = new Dictionary<string, string>();
+            var fieldPropMap = new Dictionary<int, string>();
 
             var curString = toDecode;
             while (true)
             {
                 var next = curString.IndexOf(",\"", StringComparison.Ordinal);
-                var key = curString.Substring(0, next);
+                var key = int.Parse(curString.Substring(0, next));
                 curString = curString.Substring(next + ",\"".Length);
 
                 next = curString.IndexOf(",\"", StringComparison.Ordinal);
@@ -153,7 +153,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                 curString = curString.Substring(lastQuote + 1);
             }
 
-            var transactionType = fieldPropMap.TryGetValue("0", out var t) ? t : throw new MalvernFormatException("Invalid Malvern string format", toDecode);
+            var transactionType = fieldPropMap.TryGetValue(0, out var t) ? t : throw new MalvernFormatException("Invalid Malvern string format", toDecode);
             var resultType = typeof(BaseMalvernTransaction).Assembly.GetTypes()
                 .Where(c => typeof(BaseMalvernTransaction).IsAssignableFrom(c))
                 .Where(c => Attribute.IsDefined(c, typeof(MalvernTransactionAttribute)))
