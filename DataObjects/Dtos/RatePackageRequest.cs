@@ -7,25 +7,25 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
     public class RatePackageRequest : BaseMalvernRequest
     {
         [MalvernField(11, 30)]
-        public string CompanyName { get; set; }
+        public string ShipToName { get; set; }
 
         [MalvernField(12, 30)]
-        public string AttentionTo { get; set; }
+        public string ShipToAttnTo { get; set; }
 
         [MalvernField(13, 30)]
-        public string AddressLine1 { get; set; }
+        public string ShipToAddress1 { get; set; }
         
         [MalvernField(14, 30)]
-        public string AddressLine2 { get; set; }
+        public string ShipToAddress2 { get; set; }
 
         [MalvernField(15, 30)]
-        public string City { get; set; }
+        public string ShipToCity { get; set; }
 
         [MalvernField(16, 2)]
-        public string State { get; set; }
+        public string ShipToStateProvince { get; set; }
 
         [MalvernField(17, 9)]
-        public string ZipCode { get; set; }
+        public string ShipToZipPostal { get; set; }
 
         [MalvernField(18, 15)]
         public string Phone { get; set; }
@@ -50,7 +50,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public string Department { get; set; }
 
         [MalvernField(50, 3)]
-        public string CountryCode { get; set; }
+        public string ShipToCountry { get; set; }
 
         // COD Amount (Sending a value > 0 services as the COD Flag)
         [MalvernField(53, 10, 2)]
@@ -86,7 +86,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public string PurchaseOrderNo { get; set; }
 
         [MalvernField(7011, 30)]
-        public string BillToCompany { get; set; }
+        public string BillToName { get; set; }
 
         [MalvernField(7012, 30)]
         public string BillToContact { get; set; }
@@ -126,22 +126,22 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public string ShipFromContact { get; set; }
 
         [MalvernField(9052, 30)]
-        public string ShipFromCompany { get; set; }
+        public string ShipFromName { get; set; }
 
         [MalvernField(9053, 30)]
-        public string ShipFromAddressLine1 { get; set; }
+        public string ShipFromAddress1 { get; set; }
 
         [MalvernField(9054, 30)]
-        public string ShipFromAddressLine2 { get; set; }
+        public string ShipFromAddress2 { get; set; }
 
         [MalvernField(9055, 30)]
         public string ShipFromCity { get; set; }
 
         [MalvernField(9056, 2)]
-        public string ShipFromState { get; set; }
+        public string ShipFromStateProvince { get; set; }
 
         [MalvernField(9057, 9)]
-        public string ShipFromZip { get; set; }
+        public string ShipFromZipPostal { get; set; }
 
         [MalvernField(9058, 30)]
         public string ShipFromPhone { get; set; }
