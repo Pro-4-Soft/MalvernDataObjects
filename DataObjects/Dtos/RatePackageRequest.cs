@@ -168,8 +168,11 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
     public class CustomsLineItem: BaseMalvernEntity
     {
         // Line Item Country of Origin (Manufacture) 2-Characters (US, CA, CN, etc) with line number suffix, e.g., 81-1, 82-2 etc)
-        [MalvernField(81, 2)]
+        [MalvernField(80, 2)]
         public string Origin { get; set; }
+
+        [MalvernField(81, 2)]
+        public string HtsCode { get; set; }
 
         // Item Description with line number suffix, e.g., 79-1, 79-2 etc)
         [MalvernField(79, 50)]
