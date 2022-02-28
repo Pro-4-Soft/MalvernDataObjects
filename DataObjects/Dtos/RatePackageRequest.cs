@@ -28,7 +28,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public string ShipToZipPostal { get; set; }
 
         [MalvernField(18, 15)]
-        public string Phone { get; set; }
+        public string ShipToPhone { get; set; }
 
         [MalvernField(19, 3)]
         public string CarrierCode { get; set; }
@@ -78,6 +78,9 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 
         [MalvernField(440, 1)]
         public bool IsResidential { get; set; }
+
+        [MalvernField(1266, 1)]
+        public bool SaturdayDelivery { get; set; }
 
         [MalvernField(1202, 50)]
         public string Email { get; set; }
