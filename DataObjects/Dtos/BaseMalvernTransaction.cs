@@ -89,11 +89,14 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                         builder.Append($@"{fieldId},""""");
                     continue;
                 }
-                
+
                 switch (val)
                 {
                     case string str:
+                    {
+                        str = str.TrimEnd(',');//Remove comma at end to ensure it doesn't break parser
                         builder.Append($@"{fieldId},""{str.Substring(0, attr.Length > 0 && str.Length > attr.Length ? attr.Length : str.Length)}""");
+                    }
                         break;
                     case decimal dec:
                         builder.Append($@"{fieldId},""{decimal.Round(dec, attr.DecimalLength)}""");

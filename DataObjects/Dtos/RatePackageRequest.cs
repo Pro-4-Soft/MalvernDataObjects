@@ -174,7 +174,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         [MalvernField(80, 2)]
         public string Origin { get; set; }
 
-        [MalvernField(81, 2)]
+        [MalvernField(81, 50)]
         public string HtsCode { get; set; }
 
         // Item Description with line number suffix, e.g., 79-1, 79-2 etc)

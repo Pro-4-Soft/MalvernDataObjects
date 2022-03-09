@@ -20,16 +20,16 @@ namespace Pro4Soft.Malvern.DataObjects.Infrastructure
             _port = port;
         }
 
-        public BaseMalvernResponse Send(BaseMalvernRequest payload, Dictionary<string, List<string>> carrierServiceMap, int timeout)
-        {
-            var stringToSend = payload.Encode(carrierServiceMap);
+        //public BaseMalvernResponse Send(BaseMalvernRequest payload, Dictionary<string, List<string>> carrierServiceMap, int timeout)
+        //{
+        //    var stringToSend = payload.Encode(carrierServiceMap);
 
-            var response = SendRaw(stringToSend, timeout);
+        //    var response = SendRaw(stringToSend, timeout);
 
-            var result = BaseMalvernEntity.Decode(response) as BaseMalvernResponse;
+        //    var result = BaseMalvernEntity.Decode(response) as BaseMalvernResponse;
 
-            return result;
-        }
+        //    return result;
+        //}
 
         public string SendRaw(string payload, int timeout)
         {
