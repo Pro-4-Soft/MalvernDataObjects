@@ -5,9 +5,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
     [MalvernTransaction("001")]
     public class ShipPackageRequest: RatePackageRequest
     {
-        // Bill to Account # (Conditional for alternate billing STP, BRC, B3P, COL).  Not required for 
-        // any Prepaid, UPS Consignee Billing (C/B) or FedEx Ground Collect (COL)
-        //public string BillShipNo { get; set; }
+        
     }
 
     [MalvernTransaction("101")]
@@ -33,5 +31,8 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 
         [MalvernField(9031, 3 * 1024)]
         public string CustomLabelBuffer { get; set; }
+
+        [MalvernField(288)]
+        public string CommercialInvoiceBase64 { get; set; }
     }
 }

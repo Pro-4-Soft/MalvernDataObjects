@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using Pro4Soft.Malvern.DataObjects.Dtos;
 
 namespace Pro4Soft.Malvern.DataObjects.Infrastructure
 {
@@ -20,18 +18,7 @@ namespace Pro4Soft.Malvern.DataObjects.Infrastructure
             _port = port;
         }
 
-        public BaseMalvernResponse Send(BaseMalvernRequest payload, Dictionary<string, List<string>> carrierServiceMap, int timeout)
-        {
-            var stringToSend = payload.Encode(carrierServiceMap);
-
-            var response = SendRaw(stringToSend, timeout);
-
-            var result = BaseMalvernEntity.Decode(response) as BaseMalvernResponse;
-
-            return result;
-        }
-
-        public string SendRaw(string payload, int timeout)
+        public string Send(string payload, int timeout)
         {
             var sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(_host, _port);
@@ -55,13 +42,15 @@ namespace Pro4Soft.Malvern.DataObjects.Infrastructure
             }
 
             using var mem = new MemoryStream();
-            var buffer = new byte[1024];
+            var buffer = new byte[10*1024*1024];
             while (socket.Available > 0)
             {
                 var reads = socket.Receive(buffer, buffer.Length, SocketFlags.None);
                 mem.Write(buffer, 0, reads);
+                Thread.Sleep(10);
             }
-            return Encoding.ASCII.GetString(mem.ToArray());
+            var resp = Encoding.ASCII.GetString(mem.ToArray());
+            return resp;
         }
     }
 }

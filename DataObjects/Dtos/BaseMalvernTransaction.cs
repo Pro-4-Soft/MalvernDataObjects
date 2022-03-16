@@ -224,9 +224,9 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                         prop.SetValue(result, null);
                     else if (prop.PropertyType == typeof(string))
                         prop.SetValue(result, val);
-                    else if (prop.PropertyType == typeof(decimal?))
+                    else if (prop.PropertyType == typeof(decimal?) || prop.PropertyType == typeof(decimal))
                         prop.SetValue(result, decimal.TryParse(val, out var dec) ? dec : throw new FormatException($"Invalid decimal value [{val}]"));
-                    else if (prop.PropertyType == typeof(bool?))
+                    else if (prop.PropertyType == typeof(bool?) || prop.PropertyType == typeof(bool))
                         prop.SetValue(result, val.Trim().ToLower() == "y");
                     else if (prop.PropertyType == typeof(List<CarrierServiceRate>))
                         prop.SetValue(result, val.Split(',').Select(c =>
