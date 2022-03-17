@@ -29,6 +29,9 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
 
         [MalvernField(1035, 250)]
         public List<CarrierServiceRate> DiscountedRates { get; set; }
+
+        [MalvernField(1046)]
+        public List<CarrierServiceRate> FailedRates { get; set; }
     }
 
     public class CarrierServiceRate
@@ -38,6 +41,7 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
         public string Carrier { get; set; }
         public string Service { get; set; }
         public decimal? Rate { get; set; }
+        public string Message { get; set; }
 
         public override string ToString()
         {

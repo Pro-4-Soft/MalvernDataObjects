@@ -231,13 +231,35 @@ namespace Pro4Soft.Malvern.DataObjects.Dtos
                     else if (prop.PropertyType == typeof(List<CarrierServiceRate>))
                         prop.SetValue(result, val.Split(',').Select(c =>
                         {
-                            var split = c.Split(' ');
-                            return new CarrierServiceRate
+                            var source = c;
+                            var space = source.IndexOf(' ');
+                            var first = source.Substring(0, space);
+                            source = source.Substring(space+1);
+
+                            space = source.IndexOf(' ');
+                            string second;
+                            string third = null;
+                            if (space <= 0)
+                                second = source;
+                            else
                             {
-                                Carrier = split[0],
-                                Service = split[1],
-                                Rate = split.Length > 2 ? decimal.Parse(split[2]) : (decimal?)null
+                                second = source.Substring(0, space);
+                                third = source.Substring(space + 1);
+                            }
+                            
+                            var res = new CarrierServiceRate
+                            {
+                                Carrier = first,
+                                Service = second,
                             };
+                            if (!string.IsNullOrWhiteSpace(third))
+                            {
+                                if (decimal.TryParse(third, out var decimalVal))
+                                    res.Rate = decimalVal;
+                                else
+                                    res.Message = third.Trim('*');
+                            }
+                            return res;
                         }).ToList());
                 }
                 else

@@ -22,4 +22,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\WMS\Source\DataTransferObjects\DataTransferObjects.csproj" />
+  </ItemGroup>
+
 </Project>
